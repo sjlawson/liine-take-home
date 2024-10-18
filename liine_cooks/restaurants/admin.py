@@ -1,3 +1,7 @@
 from django.contrib import admin
+from .models import Restaurant, RestaurantHour
 
-# Register your models here.
+
+@admin.register(Restaurant, RestaurantHour)
+class RestaurantAdmin(admin.ModelAdmin):
+    pass

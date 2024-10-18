@@ -2,7 +2,10 @@ from django.db import models
 
 # Create your models here.
 class Restaurant(models.Model):
-    restuarant_name = models.CharField(max_length=200)
+    restaurant_name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.restaurant_name
 
 
 class RestaurantHour(models.Model):
@@ -23,3 +26,6 @@ class RestaurantHour(models.Model):
     )
     opens_at = models.TimeField()
     closes_at = models.TimeField()
+
+    def __str__(self):
+        return f"{self.restaurant.restaurant_name}, {self.weekday}, {self.opens_at} - {self.closes_at}"

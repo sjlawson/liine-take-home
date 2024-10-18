@@ -2,3 +2,5 @@
 .envrc
 dbdata
 .venv
+__pycache__/
+*.pyc
