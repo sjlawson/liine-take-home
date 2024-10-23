@@ -12,6 +12,19 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_DB=${POSTGRES_DB}
 
+  migrate:
+    build: ./liine_cooks
+    image: liine_cooks_django
+    command: python manage.py migrate
+    volumes:
+      - './liine_cooks:/app/:z'
+    env_file:
+      - .env
+    environment:
+      - RUNLEVEL=prod
+    depends_on:
+      - db
+
   django:
     image: liine_cooks_django
     ports:
@@ -27,19 +40,6 @@ services:
       - RUNLEVEL=prod
     depends_on:
       - migrate
-
-  migrate:
-    build: ./liine_cooks
-    image: liine_cooks_django
-    command: python manage.py migrate
-    volumes:
-      - './liine_cooks:/app/:z'
-    env_file:
-      - .env
-    environment:
-      - RUNLEVEL=prod
-    depends_on:
-      - db
 
   data_loader:
     image: liine_cooks_django
