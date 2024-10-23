@@ -12,14 +12,27 @@
 ## Get and deploy
   
 - clone the git repo
+- IMPORTANT Rename and edit the file `env` to `.env`
+    - Note that the password kept in this file is very silly and should never be used
+    - Note that .env is ignored by git
+    - This file could be replaces by a secrets manager offered by a cloud provider (i.e. aws secrets manager)
 - run `docker-compose up`
+- You should be able to see this README at [http://0.0.0.0:8000/](http://0.0.0.0:8000/)
 - To test the API, send GET requests to http://0.0.0.0:8000/api/hours?datetime=YYYY-MM-DDTHH:MM 
 - Request time format is 24-hour, but response shows meridian 
 - Example request that returns data:
     - [http://0.0.0.0:8000/api/hours?datetime=2024-10-22T13:36](http://0.0.0.0:8000/api/hours?datetime=2024-10-22T13:36)
     - shows all restaurants: [http://0.0.0.0:8000/api/](http://0.0.0.0:8000/api/)
 
-  
+## Django admin setup
+The app can be managed with Django's admin ui. To use it, you will need to create a super user with:  
+`docker exec -it take-home_django_1 python manage.py createsuperuser`  
+and enter the necessary fields.  
+
+Once a user has been created, login at:  
+[http://0.0.0.0:8000/admin
+
+
 ## Data Loader
 - This Django management command is meant to simulate a simple batch ETL pipeline from a hypothetical S3 mounted bucket.
 - The loader is setup to run automatically as a service in `docker-compose.yml`
