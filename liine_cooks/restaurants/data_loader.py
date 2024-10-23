@@ -64,13 +64,15 @@ def parse_hours_input(hours_input) -> list:
         "closes_at": parse_time(end_time)} for single_day in days_to_save]
 
 
-def load_data_from_csv():
-    with open("../../restaurants.csv", "r") as infile:
+def load_data_from_csv(file_path):
+    with open(file_path, "r") as infile:
         reader = csv.DictReader(infile)
+        loaded = 0
         for row in reader:
             restaurant_name = row['Restaurant Name']
-            if restaurant := Restaurant.objects.filter(restaurant_name=restaurant_name).first():
-                logging.info(f"{restaurant_name} already in database. Updating hours!\n")
+            if Restaurant.objects.filter(restaurant_name=restaurant_name).count():
+                logging.info(f"{restaurant_name} already in database.\n")
+                continue
             else:
                 logging.info(f"Adding {restaurant_name}\n")
                 restaurant = Restaurant(restaurant_name=restaurant_name)
@@ -78,5 +80,8 @@ def load_data_from_csv():
 
             for hours_data in parse_full_hours_line(row['Hours']):
                 hours_data["restaurant"] = restaurant
-                hours_record = RestaurantHour(hours_data)
+                hours_record = RestaurantHour(**hours_data)
                 hours_record.save()
+            loaded += 1
+
+        logging.info(f"{loaded} rows loaded")

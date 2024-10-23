@@ -27,10 +27,10 @@ class RestaurantListFilterByOpen(APIView):
 
 
 def readme_view(request):
-    readme_file = open("README.md", "r")
-    readme = readme_file.read()
-    md = markdown.Markdown(extensions=["fenced_code"])
-    markdown_content = md.convert(readme)
-    context = {"markdown_content": markdown_content}
+    with open("README.md", "r") as readme_file:
+        readme = readme_file.read()
+        md = markdown.Markdown(extensions=["fenced_code"])
+        markdown_content = md.convert(readme)
+        context = {"markdown_content": markdown_content}
 
-    return render(request, "md_content.html", context=context)
+        return render(request, "md_content.html", context=context)

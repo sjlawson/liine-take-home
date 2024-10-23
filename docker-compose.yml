@@ -20,6 +20,7 @@ services:
     # command: 'gunicorn config.asgi:application -k uvicorn.workers.UvicornWorker'
     volumes:
       - './liine_cooks:/app/:z'
+      - './s3_bucket/restaurant_hours_data:/s3_mount/:z'
     env_file:
       - .env
     environment:
@@ -39,3 +40,17 @@ services:
       - RUNLEVEL=prod
     depends_on:
       - db
+
+  data_loader:
+    image: liine_cooks_django
+    depends_on:
+      - django
+    restart: "no"
+    command: 'python manage.py load_restaurant_data /s3_mount/restaurants.csv'
+    volumes:
+      - './liine_cooks:/app/:z'
+      - './s3_bucket/restaurant_hours_data:/s3_mount/:z'
+    env_file:
+      - .env
+    environment:
+      - RUNLEVEL=prod
