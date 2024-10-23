@@ -16,8 +16,8 @@ services:
     image: liine_cooks_django
     ports:
       - 8000:8000
-    command: 'python manage.py runserver 0.0.0.0:8000'
-    # command: 'gunicorn config.asgi:application -k uvicorn.workers.UvicornWorker'
+    # command: 'python manage.py runserver 0.0.0.0:8000'
+    command: 'gunicorn --bind 0.0.0.0:8000 liine_cooks.asgi:application -k uvicorn.workers.UvicornWorker'
     volumes:
       - './liine_cooks:/app/:z'
       - './s3_bucket/restaurant_hours_data:/s3_mount/:z'
@@ -47,6 +47,20 @@ services:
       - django
     restart: "no"
     command: 'python manage.py load_restaurant_data /s3_mount/restaurants.csv'
+    volumes:
+      - './liine_cooks:/app/:z'
+      - './s3_bucket/restaurant_hours_data:/s3_mount/:z'
+    env_file:
+      - .env
+    environment:
+      - RUNLEVEL=prod
+
+  testing:
+    image: liine_cooks_django
+    depends_on:
+      - django
+    restart: "no"
+    command: 'python manage.py test'
     volumes:
       - './liine_cooks:/app/:z'
       - './s3_bucket/restaurant_hours_data:/s3_mount/:z'

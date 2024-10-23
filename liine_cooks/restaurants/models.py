@@ -50,9 +50,7 @@ class RestaurantHour(models.Model):
         req_weekday = request_datetime.weekday()
 
         restaurant_hours = RestaurantHour.objects.filter(
-            weekday=req_weekday,
-            opens_at__lte=req_time,
-            closes_at__gte=req_time
+            weekday=req_weekday, opens_at__lte=req_time, closes_at__gte=req_time
         )
 
         return restaurant_hours

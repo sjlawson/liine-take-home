@@ -6,7 +6,9 @@ logger = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
-    help = 'Batch ETL process for extracting, parsing, and loading restaurant hours data'
+    help = (
+        "Batch ETL process for extracting, parsing, and loading restaurant hours data"
+    )
 
     def add_arguments(self, parser):
         parser.add_argument("input_file", nargs=1, type=str)

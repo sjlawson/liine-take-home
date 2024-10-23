@@ -1,5 +1,5 @@
 from restaurants.models import Restaurant, RestaurantHour
-from datetime import datetime
+from datetime import datetime, time
 import logging
 import csv
 
@@ -30,8 +30,8 @@ def parse_time(time_input):
 
 def parse_full_hours_line(full_line) -> list:
     combined = []
-    for hours in full_line.split('/'):
-        combined += (parse_hours_input(hours))
+    for hours in full_line.split("/"):
+        combined += parse_hours_input(hours)
     return combined
 
 
@@ -44,24 +44,38 @@ def parse_hours_input(hours_input) -> list:
 
     """
     days_to_save = []
-
+    hours_rows = []
     time_idx = get_num_index(hours_input)
     days_section = hours_input[:time_idx]
-    for day_split in days_section.split(','):
-        if '-' in day_split:
-            days = day_split.split('-')
+    for day_split in days_section.split(","):
+        if "-" in day_split:
+            days = day_split.split("-")
             day_start = DAYS.index(days[0].strip())
             day_end = DAYS.index(days[1].strip())
-            days_to_save += list(range(day_start, day_end+1))
+            days_to_save += list(range(day_start, day_end + 1))
         elif day_split:
             days_to_save.append(DAYS.index(day_split.strip()))
 
-    start_time, end_time = [t.strip() for t in hours_input[time_idx:].split('-')]
+    start_time, end_time = [
+        parse_time(t.strip()) for t in hours_input[time_idx:].split("-")
+    ]
+    if end_time < start_time:  # i.e. is open past midnight
+        late_end_time = end_time
+        late_days = [d + 1 if d < 6 else 0 for d in days_to_save]
+        late_rows = [
+            {"weekday": late_day, "opens_at": time(0), "closes_at": late_end_time}
+            for late_day in late_days
+        ]
+        hours_rows += late_rows
+        # mutate end_time
+        end_time = parse_time("11:59 pm")
 
-    return [{
-        "weekday": single_day,
-        "opens_at": parse_time(start_time),
-        "closes_at": parse_time(end_time)} for single_day in days_to_save]
+    hours_rows += [
+        {"weekday": single_day, "opens_at": start_time, "closes_at": end_time}
+        for single_day in days_to_save
+    ]
+
+    return hours_rows
 
 
 def load_data_from_csv(file_path):
@@ -69,7 +83,7 @@ def load_data_from_csv(file_path):
         reader = csv.DictReader(infile)
         loaded = 0
         for row in reader:
-            restaurant_name = row['Restaurant Name']
+            restaurant_name = row["Restaurant Name"]
             if Restaurant.objects.filter(restaurant_name=restaurant_name).count():
                 logging.info(f"{restaurant_name} already in database.\n")
                 continue
@@ -78,7 +92,7 @@ def load_data_from_csv(file_path):
                 restaurant = Restaurant(restaurant_name=restaurant_name)
                 restaurant.save()
 
-            for hours_data in parse_full_hours_line(row['Hours']):
+            for hours_data in parse_full_hours_line(row["Hours"]):
                 hours_data["restaurant"] = restaurant
                 hours_record = RestaurantHour(**hours_data)
                 hours_record.save()
