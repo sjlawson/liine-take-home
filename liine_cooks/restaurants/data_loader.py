@@ -21,19 +21,6 @@ def get_num_index(h_in: str) -> int:
             return h_in.index(cha)
 
 
-def load_data_from_csv():
-    with open("../../restaurants.csv", "r") as infile:
-        reader = csv.DictReader(infile)
-        for row in reader:
-            restaurant_name = row['Restaurant Name']
-            check_name = Restaurant.objects.filter(restaurant_name=restaurant_name)
-            if check_name.count():
-                logging.info(f"{restaurant_name} already in database.\n")
-                continue
-            restaurant = Restaurant(restaurant_name=restaurant_name)
-            restaurant.save()
-
-
 def parse_time(time_input):
     try:
         return datetime.strptime(time_input, "%I:%M %p").time()
@@ -41,14 +28,14 @@ def parse_time(time_input):
         return datetime.strptime(time_input, "%I %p").time()
 
 
-def parse_full_hours_line(full_line):
+def parse_full_hours_line(full_line) -> list:
     combined = []
     for hours in full_line.split('/'):
-        combined.append(parse_hours_input(hours))
+        combined += (parse_hours_input(hours))
     return combined
 
 
-def parse_hours_input(hours_input):
+def parse_hours_input(hours_input) -> list:
     """
     split major sections on '/' BEFORE this
     get index of first numeral.
@@ -71,7 +58,25 @@ def parse_hours_input(hours_input):
 
     start_time, end_time = [t.strip() for t in hours_input[time_idx:].split('-')]
 
-    return {
-        "days": days_to_save,
+    return [{
+        "weekday": single_day,
         "opens_at": parse_time(start_time),
-        "closes_at": parse_time(end_time)}
+        "closes_at": parse_time(end_time)} for single_day in days_to_save]
+
+
+def load_data_from_csv():
+    with open("../../restaurants.csv", "r") as infile:
+        reader = csv.DictReader(infile)
+        for row in reader:
+            restaurant_name = row['Restaurant Name']
+            if restaurant := Restaurant.objects.filter(restaurant_name=restaurant_name).first():
+                logging.info(f"{restaurant_name} already in database. Updating hours!\n")
+            else:
+                logging.info(f"Adding {restaurant_name}\n")
+                restaurant = Restaurant(restaurant_name=restaurant_name)
+                restaurant.save()
+
+            for hours_data in parse_full_hours_line(row['Hours']):
+                hours_data["restaurant"] = restaurant
+                hours_record = RestaurantHour(hours_data)
+                hours_record.save()
