@@ -22,6 +22,8 @@ services:
       - .env
     environment:
       - RUNLEVEL=prod
+    links:
+      - db
     depends_on:
       - db
 
@@ -45,6 +47,7 @@ services:
     image: liine_cooks_django
     depends_on:
       - django
+      - migrate
     restart: "no"
     command: 'python manage.py load_restaurant_data /s3_mount/restaurants.csv'
     volumes:
@@ -59,6 +62,7 @@ services:
     image: liine_cooks_django
     depends_on:
       - django
+      - db
     restart: "no"
     command: 'python manage.py test'
     volumes:
