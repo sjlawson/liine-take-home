@@ -42,6 +42,9 @@ class RestaurantHour(models.Model):
 
     @staticmethod
     def get_open_restaurants_by_datetime(query):
+        if not query:
+            return None
+
         request_datetime = datetime.strptime(query, "%Y-%m-%dT%H:%M")
         req_time = request_datetime.time()
         req_weekday = request_datetime.weekday()

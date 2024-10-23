@@ -1,8 +1,7 @@
 from restaurants.models import Restaurant, RestaurantHour
-from datetime import time
+from datetime import datetime
 import logging
 import csv
-import re
 
 
 DAYS = [
@@ -17,9 +16,9 @@ DAYS = [
 
 
 def get_num_index(h_in: str) -> int:
-        for cha in h_in:
-            if cha.isdigit():
-                return h_in.index(cha)
+    for cha in h_in:
+        if cha.isdigit():
+            return h_in.index(cha)
 
 
 def load_data_from_csv():
@@ -35,6 +34,20 @@ def load_data_from_csv():
             restaurant.save()
 
 
+def parse_time(time_input):
+    try:
+        return datetime.strptime(time_input, "%I:%M %p").time()
+    except ValueError:
+        return datetime.strptime(time_input, "%I %p").time()
+
+
+def parse_full_hours_line(full_line):
+    combined = []
+    for hours in full_line.split('/'):
+        combined.append(parse_hours_input(hours))
+    return combined
+
+
 def parse_hours_input(hours_input):
     """
     split major sections on '/' BEFORE this
@@ -47,19 +60,18 @@ def parse_hours_input(hours_input):
 
     time_idx = get_num_index(hours_input)
     days_section = hours_input[:time_idx]
-    pattern = "(?P<range>[a-zA-Z]{3,4}-[a-zA-Z]{3,4})[, ]*(?P<single>[a-zA-Z]{3,4})"
-    matches = re.search(pattern, days_section)
-    match_groups = matches.groupdisct()
+    for day_split in days_section.split(','):
+        if '-' in day_split:
+            days = day_split.split('-')
+            day_start = DAYS.index(days[0].strip())
+            day_end = DAYS.index(days[1].strip())
+            days_to_save += list(range(day_start, day_end+1))
+        elif day_split:
+            days_to_save.append(DAYS.index(day_split.strip()))
 
-    if day_range := match_groups['range']:
-        days = "-".split(day_range)
-        day_start = DAYS.index(days[0])
-        day_end = DAYS.index(days[1])
-        days_to_save += list(range(day_start, day_end+1))
+    start_time, end_time = [t.strip() for t in hours_input[time_idx:].split('-')]
 
-    if single_day := match_groups['single']:
-        days_to_save.append(DAYS.index(single_day))
-
-    start_time, end_time = [t.strip() for t in '-'.split(hours_input[time_idx:])]
-
-    return {"days": days_to_save, "opens_at": time(0), "closes_at": time(0)}
+    return {
+        "days": days_to_save,
+        "opens_at": parse_time(start_time),
+        "closes_at": parse_time(end_time)}

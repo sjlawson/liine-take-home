@@ -21,17 +21,6 @@ class RestaurantListFilterByOpen(APIView):
 
     def get(self, request, *args, **kwargs):
         query = request.query_params.get("datetime")
-        # str: 2024-10-18T17:30
-
-        # request_datetime = datetime.strptime(query, "%Y-%m-%dT%H:%M")
-        # req_time = request_datetime.time()
-        # req_weekday = request_datetime.weekday()
-
-        # restaurant_hours = RestaurantHour.objects.filter(
-        #     weekday=req_weekday,
-        #     opens_at__lte=req_time,
-        #     closes_at__gte=req_time
-        # )
         restaurant_hours = RestaurantHour.get_open_restaurants_by_datetime(query)
         serializer = RestaurantHourSerializer(restaurant_hours, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
