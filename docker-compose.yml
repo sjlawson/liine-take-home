@@ -37,8 +37,8 @@ services:
     image: liine_cooks_django
     ports:
       - 8000:8000
-    command: 'python manage.py runserver 0.0.0.0:8000'
-    # command: 'gunicorn --bind 0.0.0.0:8000 liine_cooks.asgi:application -k uvicorn.workers.UvicornWorker'
+    # command: 'python manage.py runserver 0.0.0.0:8000'
+    command: 'gunicorn --bind 0.0.0.0:8000 liine_cooks.asgi:application -k uvicorn.workers.UvicornWorker'
     volumes:
       - './liine_cooks:/app/:z'
       - './s3_bucket/restaurant_hours_data:/s3_mount/:z'
@@ -48,6 +48,17 @@ services:
       - RUNLEVEL=prod
     depends_on:
       - migrate
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - static_data:/app/static
+    depends_on:
+      - django
 
   data_loader:
     image: liine_cooks_django
@@ -78,3 +89,7 @@ services:
       - .env
     environment:
       - RUNLEVEL=prod
+
+volumes:
+  dbdata:
+  static_data:
