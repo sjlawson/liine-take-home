@@ -10,6 +10,8 @@ class RestaurantHourSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RestaurantHour
+        # if we only want a list of restaurant names, eliminate the other fields here
+        # however, in a real-worl scenario I think these would be included
         fields = ["restaurant", "weekday", "opens_at", "closes_at"]
 
     def get_weekday(self, obj):
