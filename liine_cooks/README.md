@@ -33,7 +33,7 @@ Build an API with an endpoint which takes a single parameter, a datetime string,
 
 ## Django admin setup
 The app can be managed with Django's admin ui. To use it, you will need to create a super user with:  
-`docker exec -it take-home_django_1 python manage.py createsuperuser`  
+`docker exec -it liine-take-home_django_1 python manage.py createsuperuser`  
 and enter the necessary fields.  
 
 Once a user has been created, login at:  
@@ -48,7 +48,7 @@ Once a user has been created, login at:
     
 ## Tests
 - Yes, we have tests!!
-- Run tests with: `docker exec -it take-home_django_1 python manage.py test`
+- Run tests with: `docker exec -it liine-take-home_django_1 python manage.py test`
 - They also run on launch, so you should see the following as the containers start:  
 
 >
