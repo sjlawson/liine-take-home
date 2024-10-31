@@ -20,9 +20,9 @@ Build an API with an endpoint which takes a single parameter, a datetime string,
   
 - clone the git repo
 - IMPORTANT Rename and edit the file `env` to `.env`
-    - Note that the password kept in this file is very silly and should never be used
+    - Note that passwords shouldn't be kept in a repository, this is just a placeholder.
     - Note that .env is ignored by git
-    - This file could be replaces by a secrets manager offered by a cloud provider (i.e. aws secrets manager)
+    - This file could be replaced by a secrets manager offered by a cloud provider (i.e. aws secrets manager)
 - run `docker-compose up`
 - You should be able to see this README at [http://0.0.0.0:8000/](http://0.0.0.0:8000/)
 - To test the API, send GET requests to http://0.0.0.0:8000/api/hours?datetime=YYYY-MM-DDTHH:MM 
