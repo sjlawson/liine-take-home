@@ -16,7 +16,8 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-IS_PROD = os.environ.get("RUNLEVEL") == "prod"
+RUNLEVEL = os.environ.get("RUNLEVEL") == "prod"
+IS_PROD = RUNLEVEL == "prod"
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get("SECRET_KEY")
@@ -121,11 +122,20 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+STATIC_ROOT = os.environ.get("STATIC_ROOT", os.path.join(BASE_DIR, 'static'))
+
 STATIC_FILES_DIRS = [
      os.path.join(BASE_DIR, 'static'),
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    'http://0.0.0.0',
+    'http://localhost',
+    'http://0.0.0.0:8000',
+    'http://localhost:8000',
+]
+SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

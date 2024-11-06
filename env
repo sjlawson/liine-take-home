@@ -3,3 +3,4 @@ POSTGRES_USER=liinecooks
 POSTGRES_DB=liinecooks_db
 POSTGRES_HOST=db
 SECRET_KEY="5o-very-secure-p@#2q^%nz_3)za%v2urjsr1u@h=pqb57c%0s9_y-1dv(^ix2pg"
+STATIC_ROOT=/static_files
