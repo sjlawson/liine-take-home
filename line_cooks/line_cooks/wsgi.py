@@ -1,5 +1,5 @@
 """
-WSGI config for liine_cooks project.
+WSGI config for line_cooks project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "liine_cooks.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "line_cooks.settings")
 
 application = get_wsgi_application()

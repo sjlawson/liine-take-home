@@ -18,11 +18,11 @@ services:
       retries: 3
 
   migrate:
-    build: ./liine_cooks
-    image: liine_cooks_django
+    build: ./line_cooks
+    image: line_cooks_django
     command: python manage.py migrate
     volumes:
-      - './liine_cooks:/app/:z'
+      - './line_cooks:/app/:z'
     env_file:
       - .env
     environment:
@@ -34,13 +34,13 @@ services:
         condition: service_healthy
 
   django:
-    image: liine_cooks_django
+    image: line_cooks_django
     ports:
       - 8000:8000
     # command: 'python manage.py runserver 0.0.0.0:8000'
-    command: 'gunicorn --bind 0.0.0.0:8000 liine_cooks.asgi:application -k uvicorn.workers.UvicornWorker'
+    command: 'gunicorn --bind 0.0.0.0:8000 line_cooks.asgi:application -k uvicorn.workers.UvicornWorker'
     volumes:
-      - './liine_cooks:/app/:z'
+      - './line_cooks:/app/:z'
       - './s3_bucket/restaurant_hours_data:/s3_mount/:z'
     env_file:
       - .env
@@ -61,14 +61,14 @@ services:
       - django
 
   data_loader:
-    image: liine_cooks_django
+    image: line_cooks_django
     depends_on:
       - django
       - migrate
     restart: "no"
     command: 'python manage.py load_restaurant_data /s3_mount/restaurants.csv'
     volumes:
-      - './liine_cooks:/app/:z'
+      - './line_cooks:/app/:z'
       - './s3_bucket/restaurant_hours_data:/s3_mount/:z'
     env_file:
       - .env
@@ -76,14 +76,14 @@ services:
       - RUNLEVEL=prod
 
   testing:
-    image: liine_cooks_django
+    image: line_cooks_django
     depends_on:
       - django
       - db
     restart: "no"
     command: 'python manage.py test'
     volumes:
-      - './liine_cooks:/app/:z'
+      - './line_cooks:/app/:z'
       - './s3_bucket/restaurant_hours_data:/s3_mount/:z'
     env_file:
       - .env
