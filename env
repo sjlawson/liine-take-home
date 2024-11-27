@@ -1,3 +1,3 @@
 POSTGRES_PASSWORD=s0me_BIG-secret
-POSTGRES_USER=liinecooks
-POSTGRES_DB=liinecooks_db
+POSTGRES_USER=linecooks
+POSTGRES_DB=linecooks_db

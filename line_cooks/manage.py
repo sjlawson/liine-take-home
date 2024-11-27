@@ -10,7 +10,7 @@ logger.setLevel(logging.INFO)
 
 def main():
     """Run administrative tasks."""
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "liine_cooks.settings")
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "line_cooks.settings")
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
