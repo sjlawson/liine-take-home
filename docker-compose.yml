@@ -90,6 +90,16 @@ services:
     environment:
       - RUNLEVEL=prod
 
+  frontend:
+    build: ./next-in-line
+    image: next_in_line
+    command: "npm run start"
+    ports:
+      - "3000:3000"
+    volumes:
+      - './next-in-line:/app/:z'
+      - /app/node_modules
+
 volumes:
   dbdata:
   static_data:
