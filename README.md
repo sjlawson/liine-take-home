@@ -9,7 +9,6 @@ Build an API with an endpoint which takes a single parameter, a datetime string,
 ### Example screenshot
 ![<img src="https://github.com/sjlawson/line-take-home/blob/main/drf_screenshot.png" width="400" />](https://github.com/sjlawson/line-take-home/blob/main/drf_screenshot.png)
 
-
 ## Dependencies to build and run
 - Dependencies are recent versions of
     - git
@@ -30,6 +29,12 @@ Build an API with an endpoint which takes a single parameter, a datetime string,
 - Example request that returns data:
     - [http://0.0.0.0:8000/api/hours?datetime=2024-10-22T13:36](http://0.0.0.0:8000/api/hours?datetime=2024-10-22T13:36)
     - shows all restaurants: [http://0.0.0.0:8000/api/](http://0.0.0.0:8000/api/)
+
+
+### Next.js Frontend!
+To make the usage of the API more clear, there is a NextJS frontend with a control to pick and submit date/times 
+Enter `http://localhost:3000/` in your browser once the docker app has launched to check it out
+
 
 ## Django admin setup
 The app can be managed with Django's admin ui. To use it, you will need to create a super user with:  
