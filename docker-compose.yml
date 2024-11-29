@@ -93,7 +93,7 @@ services:
   frontend:
     build: ./next-in-line
     image: next_in_line
-    command: "npm run start"
+    command: "npm run dev"
     ports:
       - "3000:3000"
     volumes:
