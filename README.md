@@ -1,13 +1,13 @@
-# Liine Cooks - API app by SJlawson
+# Line Cooks - API app by SJlawson
 
 > A line cook is a kitchen staff member who works at a specific station in a restaurant kitchen, preparing and cooking food.  
-*"Liine Cooks"* is a play on words and the name of this fancy restaurant info app!  
+*"Line Cooks"* is a play on words and the name of this fancy restaurant info app!  
 
 ## Project description
 Build an API with an endpoint which takes a single parameter, a datetime string, and returns a list of restaurant names which are open on that date and time. You are provided a dataset in the form of a CSV file of restaurant names and a human-readable, string-formatted list of open hours.
 
 ### Example screenshot
-![<img src="https://github.com/sjlawson/line-take-home/blob/main/drf_screenshot.png" width="400" />](https://github.com/sjlawson/line-take-home/blob/main/drf_screenshot.png)
+![<img src="https://github.com/sjlawson/linecooks-django-next-app/blob/main/drf_screenshot.png" width="400" />](https://github.com/sjlawson/linecooks-django-next-app/blob/main/drf_screenshot.png)
 
 ## Dependencies to build and run
 - Dependencies are recent versions of
